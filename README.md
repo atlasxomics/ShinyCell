@@ -12,6 +12,7 @@ Then open either server.R or ui.R using RStudio and click on "Run App" in the to
 
 # Required Libraires
 make sure your RStudio already installed the following librarires: shiny, shinyhelper, data.table, Matrix, DT, magrittr. Since all of them are CRAN packages you can install them by the following code:
+
 install.packages(c('shiny', 'shinyhelper', 'data.table', 'Matrix', 'DT', 'magrittr'))
 
 # Quick Start Guide
