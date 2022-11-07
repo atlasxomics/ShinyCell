@@ -11,7 +11,8 @@ Then open either server.R or ui.R using RStudio and click on "Run App" in the to
 ![alt text](https://github.com/atlasxomics/ShinyCell/blob/main/images/Screenshot%202022-11-07%20at%2010.28.53%20AM.png)
 
 # Required Libraires
-make sure your RStudio already installed the following librarires: shiny, shinyhelper, data.table, Matrix, DT, magrittr 
+make sure your RStudio already installed the following librarires: shiny, shinyhelper, data.table, Matrix, DT, magrittr. Since all of them are CRAN packages you can install them by the following code:
+install.packages(c('shiny', 'shinyhelper', 'data.table', 'Matrix', 'DT', 'magrittr'))
 
 # Quick Start Guide
 The shiny app contains seven tabs (highlighted in blue box), ...
