@@ -19,10 +19,12 @@ make sure your RStudio already installed the following librarires: shiny, shinyh
 
 install.packages(c("shiny", "shinyhelper", "data.table", "Matrix", "DT", "magrittr","ggplot2","ggrepel","hdf5r","ggdendro","gridExtra", "ggseqlogo", "circlize"))
 
-For ploting heatmaps, ComplexHeatmap used and it needs to be installed by Biocmanager as explained [here](https://www.bioconductor.org/packages/release/bioc/html/ComplexHeatmap.html). To install this package, start R use the following codes:
+For ploting heatmaps, ComplexHeatmap used and it needs to be installed by BiocManager as explained [here](https://www.bioconductor.org/packages/release/bioc/html/ComplexHeatmap.html). To install this package, start R use the following codes:
+
 
 if (!require("BiocManager", quietly = TRUE))
     install.packages("BiocManager")
+
 
 BiocManager::install("ComplexHeatmap")
 
@@ -30,4 +32,5 @@ BiocManager::install("ComplexHeatmap")
 
 
 # Quick Start Guide
-The shiny app contains twelve tabs (highlighted in blue box), ...
+The shiny app currently contains eleven tabs , and this might be developed to more tabs in future. 
+In the tab called Bubbleplot/Heatmap user can plot heatmap of the input genes. This tab is using Complexheatmap package and depending on the number of imported genes and the user local system, it might take a few minutes. This tab is under development and currently only support Heatmaps. 
