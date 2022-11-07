@@ -5,3 +5,5 @@ as [here](https://github.com/SGDDNB/ShinyCell#quick-start-guide) explains, to ru
 # Required Libraires
 make sure your RStudio already installed the following librarires: shiny, shinyhelper, data.table, Matrix, DT, magrittr 
 
+# Quick Start Guide
+The shiny app contains seven tabs (highlighted in blue box), ...
