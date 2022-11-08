@@ -26,7 +26,7 @@ Then open either server.R or ui.R using RStudio and click on "Run App" in the to
   </p>
 
 
-# Required Libraires
+# Required Libraries
 make sure RStudio already installed the following librarires: shiny, shinyhelper, data.table, Matrix, DT, magrittr, ggplot2, ggrepel, hdf5r, ggdendro, gridExtra, ggseqlogo and circlize. Since all of them are CRAN packages you can install them by the following code:
 
 install.packages(c("shiny", "shinyhelper", "data.table", "Matrix", "DT", "magrittr","ggplot2","ggrepel","hdf5r","ggdendro","gridExtra", "ggseqlogo", "circlize"))
