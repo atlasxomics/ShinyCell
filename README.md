@@ -10,7 +10,7 @@ as [here](https://github.com/SGDDNB/ShinyCell#quick-start-guide) explains, to ru
   </p>
   
   
-Next, you need to browse to the Rstudio working directory and change it to the new created folder as shown below in "R Sessions" section.
+Next, browse to the Rstudio working directory and change it to the new created folder as shown below in "R Sessions" section.
 
 
 <p align="center">
@@ -18,7 +18,7 @@ Next, you need to browse to the Rstudio working directory and change it to the n
   </p>
 
 
-Then open either server.R or ui.R using RStudio and click on "Run App" in the top right corner. Now, you are all set to explore your data!
+Then open either server.R or ui.R using RStudio and click on "Run App" in the top right corner. Now, you are all set to explore the data!
 
 
 <p align="center">
