@@ -19,14 +19,6 @@ make sure your RStudio already installed the following librarires: shiny, shinyh
 
 install.packages(c("shiny", "shinyhelper", "data.table", "Matrix", "DT", "magrittr","ggplot2","ggrepel","hdf5r","ggdendro","gridExtra", "ggseqlogo", "circlize"))
 
-For ploting heatmaps, ComplexHeatmap used and it needs to be installed by BiocManager as explained [here](https://www.bioconductor.org/packages/release/bioc/html/ComplexHeatmap.html). To install this package, start R use the following codes:
-
-
-if (!require("BiocManager", quietly = TRUE))
-    install.packages("BiocManager")
-
-
-BiocManager::install("ComplexHeatmap")
 
 
 
