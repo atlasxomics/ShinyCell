@@ -22,7 +22,7 @@ Then open either server.R or ui.R using RStudio and click on "Run App" in the to
 
 
 <p align="center">
-<img src="https://github.com/atlasxomics/ShinyCell/blob/main/images/how_to_run_app.png" width="900" height="245">
+<img src="https://github.com/atlasxomics/ShinyCell/blob/main/images/how_to_run_app.png" width="1100" height="245">
   </p>
 
 
