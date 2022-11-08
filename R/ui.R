@@ -1035,7 +1035,7 @@ tabPanel(
 
    
 br(), 
-p(strong("Reference: "),"Rai Lab Data Analysis ",style = "font-size: 125%;"),
+
 p(em("This webpage was made using "), a("ShinyCell",
   href = "https://github.com/SGDDNB/ShinyCell",target="_blank")),
 br(),br(),br(),br(),br() 
