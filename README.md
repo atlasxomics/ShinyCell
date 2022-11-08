@@ -27,5 +27,6 @@ install.packages(c("shiny", "shinyhelper", "data.table", "Matrix", "DT", "magrit
 
 
 # Quick Start Guide
-The shiny app currently contains eleven tabs , and this might be developed to more tabs in future. 
-In the tab called Bubbleplot/Heatmap user can plot heatmap of the input genes. This tab is using Complexheatmap package and depending on the number of imported genes and the user local system, it might take a few minutes. This tab is under development and currently only support Heatmaps. 
+Please first check [here](https://github.com/SGDDNB/ShinyCell#quick-start-guide) for a quick guide. The main differences between original and the version in this repository is the ability of visualization two different samples side by side.
+The current version contains eleven tabs , and this might be developed to more tabs in future. 
+
