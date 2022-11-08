@@ -10,7 +10,7 @@ as [here](https://github.com/SGDDNB/ShinyCell#quick-start-guide) explains, to ru
   </p>
   
   
-Next, you need to browse to the Rstudio working directory and change it to the new created folder as shown below in "R Sessions" secion.
+Next, you need to browse to the Rstudio working directory and change it to the new created folder as shown below in "R Sessions" section.
 
 
 <p align="center">
