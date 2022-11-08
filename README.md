@@ -14,7 +14,7 @@ Next, you need to browse to the Rstudio working directory and change it to the n
 Then open either server.R or ui.R using RStudio and click on "Run App" in the top right corner. Now, you are all set to explore your data!
 
 <p align="center">
-<img src="https://github.com/atlasxomics/ShinyCell/blob/main/images/how_to_run_app.png" width="700" height="245">
+<img src="https://github.com/atlasxomics/ShinyCell/blob/main/images/how_to_run_app.png" width="800" height="245">
   </p>
 
 
