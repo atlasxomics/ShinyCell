@@ -31,6 +31,8 @@ make sure the following librarires already installed on Rstudio: Since all of th
 
 install.packages(c("shiny", "shinyhelper", "data.table", "Matrix", "DT", "magrittr","ggplot2","ggrepel","hdf5r","ggdendro","gridExtra", "ggseqlogo", "circlize"))
 
+make sure to restart RStudio after installing the new packages.
+
 
 
 
