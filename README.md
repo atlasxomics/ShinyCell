@@ -31,6 +31,13 @@ make sure the following librarires already installed on Rstudio: Since all of th
 
 install.packages(c("shiny", "shinyhelper", "data.table", "Matrix", "DT", "magrittr","ggplot2","ggrepel","hdf5r","ggdendro","gridExtra", "ggseqlogo", "circlize"))
 
+and to install ComplexHeatmap use the following code:
+
+if (!require("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+
+BiocManager::install("ComplexHeatmap")
+
 make sure to restart RStudio after installing the new packages.
 
 
