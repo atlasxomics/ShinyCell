@@ -35,12 +35,13 @@ find_func <- function(tempdir,pattern){
     
 }
 
-
 args <- commandArgs(trailingOnly=TRUE)
 tempdir <- args[1]
 
+print(tempdir)
+print(system(paste0("ls ", tempdir), intern = TRUE))
 ArchRobj <- system(paste0("find ", tempdir, " -name '*_ArchRProject' -type d"), intern = TRUE)
-
+print(ArchRobj)
 
 proj3 <- loadArchRProject(path = ArchRobj, force = FALSE, showLogo = TRUE)
 
@@ -78,7 +79,6 @@ for (i in seq_along(names)){
                                                         ))
  
 }
-
 
 inputs1 <- all
 

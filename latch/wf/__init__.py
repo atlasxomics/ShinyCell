@@ -27,38 +27,62 @@ from latch.types import (
 )
 
 @dataclass
-class RunName:
+class Run:
     run_name: str
     archrObj: LatchDir
 
-# @dataclass
-# class ArchrObject:
-#     archrObj: LatchDir
-
+@dataclass
+class Project:
+    project_id: str
+    archrObj: LatchDir
 
 @dataclass
 class ShinyProject:
-    run_ids: List[str]
     shiny_dir: LatchDir
     run_names: List[str]
 
+def initialize_runs(projects: List[Project], project_table_id: str) -> List[Run]:
+    runs = []
+    project_table=Table(project_table_id)
+    try:
+        for p in projects:
+            for page in project_table.list_records(): 
+                for p_id, record in page.items():
+                    p_id = record.get_name()
+                    if p_id == p.project_id:
+                        project = record.get_values()
+                        try:
+                            if len(project['Runs']) > 0:
+                                for project_run in project['Runs']:
+                                    run_info = project_run.get_values()
+                                    run_id = project_run.get_name()
+                                    try:
+                                        run_archr = run_info['archrproject_outs']
+                                        runs.append(Run(run_id, run_archr))
+                                    except:
+                                        print(f"Data missing for run: {run_id}")
+                        except:
+                            break
+        return runs
+    except Exception as err:
+        print(f"Unexpected {err=}, {type(err)=}")
+        return
 
 @large_task
 def runScript(
-    runNames: List[RunName],
+    projects: List[Project],
     output_dir: LatchDir,
     project: str = "test",
     groupBy: str = "Clusters",
 ) -> ShinyProject:
-    local_archr_dir = runNames[0].archrObj.local_path
 
-    print(local_archr_dir)
-    print("RUN NAMES")
+    runs = initialize_runs(projects, project_table_id)
+
+    local_archr_dir = projects[0].archrObj.local_path
+
     r_names_list = []
-    for r in runNames:
-        print(r.run_name)
+    for r in runs:
         r_names_list.append(r.run_name)
-    print(runNames)
 
     run_ids = [
         Path(i).stem for i in glob.glob(f"{local_archr_dir}/**/*.arrow", recursive=True)
@@ -75,15 +99,17 @@ def runScript(
         remote_path += "/"
 
     return ShinyProject(
-        run_ids=run_ids, shiny_dir=LatchDir(local_output_dir, remote_path),run_names=r_names_list
+        shiny_dir=LatchDir(local_output_dir, remote_path), run_names=r_names_list
     )
 
 @small_task
 def upload_to_registry(
+    projects: List[Project],
     shiny_project: ShinyProject,
     run_table_id: str = "761",
-    project_table_id: str = "779",
+    project_table_id: str = "917",
 ):
+    runs = initialize_runs(projects, project_table_id)
     run_table = Table(run_table_id)
     project_table = Table(project_table_id)
 
@@ -93,8 +119,8 @@ def upload_to_registry(
                 updater.upsert_record(run, atlasshiny_outs=shiny_project.shiny_dir)
 
         with project_table.update() as updater:
-            for run in shiny_project.run_names:
-                updater.upsert_record(run, atlasshiny_outs=shiny_project.shiny_dir)
+            for p in projects:
+                updater.upsert_record(p.project_id, atlasshiny_outs=shiny_project.shiny_dir)
 
     except Exception as err:
         print(f"Unexpected {err=}, {type(err)=}")
@@ -113,10 +139,11 @@ metadata = LatchMetadata(
     license="MIT",
     parameters={
 
-        "runNames": LatchParameter(
+        "projects": LatchParameter(
             display_name="ArchR Objects",
-            description="Select runs",
+            description="Select projects for which the ArchRObject will be processed.",
             samplesheet=True,
+            batch_table_column=True,
         ),
         "project": LatchParameter(
             display_name="Project Name",
@@ -142,12 +169,12 @@ metadata = LatchMetadata(
 
 @workflow(metadata)
 def shinyArchr_wf(
-    runNames: List[RunName],
+    projects: List[Project],
     output_dir: LatchDir,
     project: str = "test",
     groupBy: str = "Clusters",
     run_table_id: str = "761",
-    project_table_id: str = "779"
+    project_table_id: str = "917"
 ) -> ShinyProject:
     """is a full-featured software suite for the analysis of single-cell chromatin accessibility data.
 
@@ -158,19 +185,20 @@ def shinyArchr_wf(
     """
 
     shiny_project = runScript(
-        output_dir=output_dir, project=project, groupBy=groupBy, runNames=runNames
+        output_dir=output_dir, project=project, groupBy=groupBy, projects=projects
     )
-
-    upload_to_registry(shiny_project=shiny_project, run_table_id=run_table_id, project_table_id=project_table_id)
+    
+    upload_to_registry(projects=projects, shiny_project=shiny_project, run_table_id=run_table_id, project_table_id=project_table_id)
 
     return shiny_project
 
-if __name__ == "__main__":
+# if __name__ == "__main__":
 
-    shinyArchr_wf(
-        output_dir=LatchDir("latch://13502.account/rshinyA_outs"),
-        project="D1266_w_chromap_frag",
-        groupBy="Clusters",
-        run_table_id="761",
-        project_table_id="779"
-    )
+#     shinyArchr_wf(
+#         projects = [Project("sample_project\n\n", LatchDir())],
+#         output_dir=LatchDir("latch://13502.account/"),
+#         project="D1266_w_chromap_frag",
+#         groupBy="Clusters",
+#         run_table_id="761",
+#         project_table_id="917"
+#     )
