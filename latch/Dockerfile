@@ -100,12 +100,20 @@ RUN R -e "BiocManager::install('BSgenome.Mmusculus.UCSC.mm10',ask = FALSE)"
 # STOP HERE:
 # The following lines are needed to ensure your build environement works
 # correctly with latch.
-# RUN python3 -m pip install --upgrade latch
-RUN python3 -m pip install  latch==2.29.0
-RUN python3 -m pip install macs2==2.2.6
-# RUN python3 -m pip install macs2
+RUN python3 -m pip install --upgrade latch
+# RUN python3 -m pip install  latch==2.29.0
+# RUN python3 -m pip install macs2==2.2.6
+RUN python3 -m pip install macs2
+run pip install latch==2.36.3
+run mkdir /opt/latch
 
-COPY wf /root/wf
-ARG tag
-ENV FLYTE_INTERNAL_IMAGE $tag
-WORKDIR /root
+# Copy workflow data (use .dockerignore to skip files)
+copy . .latch/* /root/
+
+# Latch workflow registration metadata
+# DO NOT CHANGE
+arg tag
+# DO NOT CHANGE
+env FLYTE_INTERNAL_IMAGE $tag
+
+workdir /root

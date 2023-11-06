@@ -18,7 +18,10 @@ suppressPackageStartupMessages(library(data.table))
 dir.create("/root/results", showWarnings = FALSE)
 setwd("/root/results")
 
-
+rawPath <- "/root/"
+dataFiles <- dir(rawPath, "*.R$", ignore.case = TRUE, all.files = TRUE)
+dataPath <- "/root/results/"
+file.copy(file.path(rawPath, dataFiles), dataPath, overwrite = TRUE)
 
 find_func <- function(tempdir,pattern){
     
@@ -32,12 +35,13 @@ find_func <- function(tempdir,pattern){
     
 }
 
-
 args <- commandArgs(trailingOnly=TRUE)
 tempdir <- args[1]
 
+print(tempdir)
+print(system(paste0("ls ", tempdir), intern = TRUE))
 ArchRobj <- system(paste0("find ", tempdir, " -name '*_ArchRProject' -type d"), intern = TRUE)
-
+print(ArchRobj)
 
 proj3 <- loadArchRProject(path = ArchRobj, force = FALSE, showLogo = TRUE)
 
@@ -76,7 +80,6 @@ for (i in seq_along(names)){
  
 }
 
-
 inputs1 <- all
 
 # motif objects
@@ -114,7 +117,7 @@ for (i in seq_along(names)){
 
 
 inputs2 <- all2
-
+tempdir <- "/root/results"
 
 
 inputs3 <- find_func(tempdir,"UMAPHarmony.csv")
@@ -433,7 +436,9 @@ saveRDS(sc2conf,"/root/results/shinyApp/sc2conf.rds")
 
 
 
-rawPath <- args[1]
+# rawPath <- args[1]
+rawPath <- "/root/results/"
+
 dataFiles <- dir(rawPath, "*.rds$", ignore.case = TRUE, all.files = TRUE)
 dataPath <- "/root/results/shinyApp/"
 file.copy(file.path(rawPath, dataFiles), dataPath, overwrite = TRUE)
