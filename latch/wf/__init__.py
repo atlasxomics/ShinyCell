@@ -211,7 +211,8 @@ def shinyArchr_wf(
         output_dir=output_dir,
         project=project,
         groupBy=groupBy,
-        projects=projects
+        projects=projects,
+        project_table_id=project_table_id
     )
 
     upload_to_registry(
