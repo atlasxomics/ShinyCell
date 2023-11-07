@@ -1,52 +1,51 @@
+"""Latch wrapper of ArchR plotEmbedding function.
 """
-Latch wrapper of ArchR plotEmbedding function.
-"""
-
 
 import subprocess
 import glob
+
 from pathlib import Path
-
-from flytekit import LaunchPlan, task, workflow
-from latch.types import LatchDir
-from latch.types import LatchFile
-from latch.registry.table import Table
 from dataclasses import dataclass
-from dataclasses_json import dataclass_json
-from enum import Enum
 from typing import List
-from latch import large_task, small_task, workflow
 
+from latch import large_task, small_task, workflow
+from latch.registry.table import Table
 from latch.types import (
     LatchAuthor,
     LatchDir,
-    LatchFile,
     LatchMetadata,
     LatchParameter,
-    LatchRule,
 )
+
 
 @dataclass
 class Run:
     run_name: str
     archrObj: LatchDir
 
+
 @dataclass
 class Project:
     project_id: str
     archrObj: LatchDir
+
 
 @dataclass
 class ShinyProject:
     shiny_dir: LatchDir
     run_names: List[str]
 
-def initialize_runs(projects: List[Project], project_table_id: str) -> List[Run]:
+
+def initialize_runs(
+    projects: List[Project],
+    project_table_id: str
+) -> List[Run]:
+
     runs = []
-    project_table=Table(project_table_id)
+    project_table = Table(project_table_id)
     try:
         for p in projects:
-            for page in project_table.list_records(): 
+            for page in project_table.list_records():
                 for p_id, record in page.items():
                     p_id = record.get_name()
                     if p_id == p.project_id:
@@ -57,10 +56,14 @@ def initialize_runs(projects: List[Project], project_table_id: str) -> List[Run]
                                     run_info = project_run.get_values()
                                     run_id = project_run.get_name()
                                     try:
-                                        run_archr = run_info['archrproject_outs']
+                                        run_archr = run_info[
+                                            'archrproject_outs'
+                                        ]
                                         runs.append(Run(run_id, run_archr))
                                     except:
-                                        print(f"Data missing for run: {run_id}")
+                                        print(
+                                            f"Data missing for run: {run_id}"
+                                        )
                         except:
                             break
         return runs
@@ -68,9 +71,11 @@ def initialize_runs(projects: List[Project], project_table_id: str) -> List[Run]
         print(f"Unexpected {err=}, {type(err)=}")
         return
 
+
 @large_task
 def runScript(
     projects: List[Project],
+    project_table_id: str,
     output_dir: LatchDir,
     project: str = "test",
     groupBy: str = "Clusters",
@@ -85,22 +90,26 @@ def runScript(
         r_names_list.append(r.run_name)
 
     run_ids = [
-        Path(i).stem for i in glob.glob(f"{local_archr_dir}/**/*.arrow", recursive=True)
+        Path(i).stem for i in glob.glob(
+            f"{local_archr_dir}/**/*.arrow", recursive=True
+        )
     ]
 
     subprocess.run(
         ["Rscript", "/root/wf/runShiny.R", local_archr_dir, project, groupBy]
     )
 
-    local_output_dir = str(Path(f"/root/").resolve())
+    local_output_dir = str(Path("/root/").resolve())
 
     remote_path = output_dir.remote_path
     if remote_path[-1] != "/":
         remote_path += "/"
 
     return ShinyProject(
-        shiny_dir=LatchDir(local_output_dir, remote_path), run_names=r_names_list
+        shiny_dir=LatchDir(local_output_dir, remote_path),
+        run_names=r_names_list
     )
+
 
 @small_task
 def upload_to_registry(
@@ -109,6 +118,7 @@ def upload_to_registry(
     run_table_id: str = "761",
     project_table_id: str = "917",
 ):
+
     runs = initialize_runs(projects, project_table_id)
     run_table = Table(run_table_id)
     project_table = Table(project_table_id)
@@ -116,17 +126,24 @@ def upload_to_registry(
     try:
         with run_table.update() as updater:
             for run in shiny_project.run_names:
-                updater.upsert_record(run, atlasshiny_outs=shiny_project.shiny_dir)
+                updater.upsert_record(
+                    run,
+                    atlasshiny_outs=shiny_project.shiny_dir
+                )
 
         with project_table.update() as updater:
             for p in projects:
-                updater.upsert_record(p.project_id, atlasshiny_outs=shiny_project.shiny_dir)
+                updater.upsert_record(
+                    p.project_id,
+                    atlasshiny_outs=shiny_project.shiny_dir
+                )
 
     except Exception as err:
         print(f"Unexpected {err=}, {type(err)=}")
         return
     finally:
         return
+
 
 metadata = LatchMetadata(
     display_name="atlasShiny",
@@ -141,7 +158,8 @@ metadata = LatchMetadata(
 
         "projects": LatchParameter(
             display_name="ArchR Objects",
-            description="Select projects for which the ArchRObject will be processed.",
+            description="Select projects for which the ArchRObject will be \
+                        processed.",
             samplesheet=True,
             batch_table_column=True,
         ),
@@ -154,7 +172,8 @@ metadata = LatchMetadata(
             description="A string that indicates how cells should be grouped.",
         ),
         "output_dir": LatchParameter(
-            display_name="Output Directory", description="Where to save the plots?."
+            display_name="Output Directory",
+            description="Where to save the plots?."
         ),
         "run_table_id": LatchParameter(
             display_name="Registry Table ID",
@@ -162,10 +181,12 @@ metadata = LatchMetadata(
         ),
         'project_table_id': LatchParameter(
             display_name='The ID of the SOWs Registry table',
-            description='The Shiny project will be inserted into the SOW table for the corresponding runs.'
+            description='The Shiny project will be inserted into the SOW \
+                        table for the corresponding runs.'
         )
     },
 )
+
 
 @workflow(metadata)
 def shinyArchr_wf(
@@ -176,26 +197,37 @@ def shinyArchr_wf(
     run_table_id: str = "761",
     project_table_id: str = "917"
 ) -> ShinyProject:
-    """is a full-featured software suite for the analysis of single-cell chromatin accessibility data.
+    """is a full-featured software suite for the analysis of single-cell
+    chromatin accessibility data.
 
     atlasShiny
     ----
 
-    `atlasShiny` is a full-featured application for the exploring of ArchR output data.
+    `atlasShiny` is a full-featured application for the exploring of ArchR
+    output data.
     """
 
     shiny_project = runScript(
-        output_dir=output_dir, project=project, groupBy=groupBy, projects=projects
+        output_dir=output_dir,
+        project=project,
+        groupBy=groupBy,
+        projects=projects
     )
-    
-    upload_to_registry(projects=projects, shiny_project=shiny_project, run_table_id=run_table_id, project_table_id=project_table_id)
+
+    upload_to_registry(
+        projects=projects,
+        shiny_project=shiny_project,
+        run_table_id=run_table_id,
+        project_table_id=project_table_id
+    )
 
     return shiny_project
+
 
 # if __name__ == "__main__":
 
 #     shinyArchr_wf(
-#         projects = [Project("sample_project\n\n", LatchDir())],
+#         projects=[Project("sample_project\n\n", LatchDir())],
 #         output_dir=LatchDir("latch://13502.account/"),
 #         project="D1266_w_chromap_frag",
 #         groupBy="Clusters",
