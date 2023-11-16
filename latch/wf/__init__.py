@@ -60,11 +60,16 @@ def initialize_runs(
                                             'archrproject_outs'
                                         ]
                                         runs.append(Run(run_id, run_archr))
-                                    except:
+                                    except Exception as err:
                                         print(
-                                            f"Data missing for run: {run_id}"
+                                            f"Unexpected {err=}: Data missing \
+                                                for run: {run_id}"
                                         )
-                        except:
+                        except Exception as err:
+                            print(
+                                f"Unexpected {err=}: no runs found for this \
+                                    project"
+                            )
                             break
         return runs
     except Exception as err:
@@ -225,13 +230,16 @@ def shinyArchr_wf(
     return shiny_project
 
 
-# if __name__ == "__main__":
+if __name__ == "__main__":
 
-#     shinyArchr_wf(
-#         projects=[Project("sample_project\n\n", LatchDir())],
-#         output_dir=LatchDir("latch://13502.account/"),
-#         project="D1266_w_chromap_frag",
-#         groupBy="Clusters",
-#         run_table_id="761",
-#         project_table_id="917"
-#     )
+    shinyArchr_wf(
+        projects=[Project(
+            "Rai_ROI_Comparison",
+            LatchDir("latch://13502.account/ArchRProjects/Rai_ROI_Comparison")
+        )],
+        output_dir=LatchDir("latch://13502.account/rshinyA_outs/registry_test"),
+        project="Rai_ROI_Comparison",
+        groupBy="Clusters",
+        run_table_id="761",
+        project_table_id="917"
+    )

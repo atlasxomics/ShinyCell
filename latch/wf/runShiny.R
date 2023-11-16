@@ -114,11 +114,7 @@ for (i in seq_along(names)){
 
 }
 
-
-
 inputs2 <- all2
-tempdir <- "/root/results"
-
 
 inputs3 <- find_func(tempdir,"UMAPHarmony.csv")
 req_genes1 <- find_func(tempdir,"req_genes1.csv")
